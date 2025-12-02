@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Pranshu's Blog - New window commands for emacs</title>
+        <link rel="stylesheet" href="../css/default.css" />
+	<link rel="icon" href="../stuff/favicon.png">
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">Pranshu's Blog</a>
+		<button id="theme-toggle"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;" id="themesvg"></svg></button>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+		<a align="right" href="../rss.xml">Feed</a>
+            </nav>
+        </header>
+        <main role="main">
+            <h1>New window commands for emacs</h1>
+            <article>
+    <section class="header">
+        Posted on March 29, 2025
+        
+    </section>
+    <section class="info">
+	
+        tags: <a title="All pages tagged 'tech'." href="../tags/tech.html" rel="tag">tech</a>
+        
+    </section>
+    <section>
+        <h1 id="intro">Intro</h1>
+<p>Around September 2024, I also discovered this useful package for emacs
+windows management
+<a href="https://www.emacswiki.org/emacs/TransposeFrame">transpose-frame.el</a>.</p>
+<p>Around this time, I read Tobias' article on <a href="https://blogs.gnome.org/tbernard/2020/01/17/doing-things-that-scale/">doing things that scale</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>So of course, as a changed man, I sent a simple email asking for
+<code class="verbatim">tranpose-frame.el</code> to be moved to emacs core. But as it
+turned out, the package had many things wrong at it's core which would
+be impossible to fix without a rewrite.</p>
+<p>Basiclly, <code class="verbatim">transpose-frame.el</code> relies on "copy pasting"
+window states(like the buffer, overlays, etc…), which was a faulty
+approach<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. The correct approach required new code in emacs <em>C-land</em>
+to be able to 'necromance' window objects when using the function
+<code class="verbatim">split-window</code>. For this reason, simply changing up the code
+in <code class="verbatim">transpose-frame.el</code> would not be sufficant. A full
+rewrite was required.</p>
+<p>So, not knowing how much work was in, I agreed to do it. So after
+about 4 months of infrequent, <em>painful</em> work<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, including constant
+collaboration with Martin Rudalics, the <code class="verbatim">windows.c</code> and
+<code class="verbatim">windows.el</code> maintainer who take care of all the code in
+the <em>C-land</em> size. <strong>Now</strong>, emacs 31 has all the functionality that
+<code class="verbatim">transpose-frame.el</code> had, plus extra. The file containg all
+these comands is <code class="verbatim">window-x.el</code>, which <strong>can be found
+here</strong>:
+<a href="https://github.com/emacs-mirror/emacs/blob/master/lisp/window-x.el" class="uri">https://github.com/emacs-mirror/emacs/blob/master/lisp/window-x.el</a>.</p>
+<h1 id="commands">Commands</h1>
+<p>Now, I used a simple layout for the following images simply cause I was
+too lazy to make more complex ones. Keep in mind, that these commands
+can work for <strong>any</strong> complex window layout you can cook up.</p>
+<p>I would suggest trying them and playing around with them, but if you
+don't have emacs 31, this is a preview.</p>
+<h2 id="transpose">Transpose</h2>
+<p><code class="verbatim">M-x transpose-window-layout</code></p>
+<p>This one is basiclly diagonal reflection.</p>
+<p><img src="../2025stuff/window/transpose.png" /></p>
+<h2 id="rotate-layout">Rotate layout</h2>
+<p><code class="verbatim">M-x rotate-window-layout-clockwise</code></p>
+<p><code class="verbatim">M-x rotate-window-layout-anticlockwise</code></p>
+<p><img src="../2025stuff/window/rotate-clock.png" /></p>
+<h2 id="flip">Flip</h2>
+<p><code class="verbatim">M-x flip-window-layout-horizontally</code></p>
+<p><code class="verbatim">M-x flip-window-layout-vertically</code></p>
+<p><img src="../2025stuff/window/flip-v.png" /></p>
+<h2 id="cycle-rotate-windows">Cycle (rotate windows)</h2>
+<p>This one is my personal favourite.</p>
+<p><code class="verbatim">M-x rotate-windows</code></p>
+<p><img src="../2025stuff/window/cycle.png" /></p>
+<p><code class="verbatim">M-x rotate-windows-back</code></p>
+<p><img src="../2025stuff/window/cycle-anti.png" /></p>
+<h1 id="footnotes">Footnotes</h1>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>TLDR: instead of customizing and maintaing customizations, try push
+changes to upstream<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>This <a href="https://yhetil.org/emacs-devel/ac1735fd-e023-4e01-a3e2-2bd19087594c@gmx.at/">mail</a> goes in more detail about what was wrong with
+<code class="verbatim">transpose-frame.el</code><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>(The emacs window
+system is much\, much\, more complex than what meets the surface)<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            2025 &copy Pranshu
+        </footer>
+	<script>
+	 const themeToggle = document.getElementById('theme-toggle');
+	 const themebutton = document.getElementById('themesvg');
+	 const root = document.documentElement;
+	 const moonsvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+	 const sunsvg = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+	 function applyTheme(theme) {
+	     if (theme === 'dark') {
+		 root.classList.add('dark-mode');
+		 themebutton.innerHTML = moonsvg;
+	     } else {
+		 root.classList.remove('dark-mode');
+		 themebutton.innerHTML = sunsvg;
+	     }
+	     localStorage.setItem('theme', theme);
+	 }
+	 document.addEventListener('DOMContentLoaded', () => {
+	     const savedTheme = localStorage.getItem('theme');
+	     if (savedTheme) {
+		 applyTheme(savedTheme);
+	     } else {
+		 applyTheme('light');
+	     }
+	 });
+	 themeToggle.addEventListener('click', () => {
+	    if (root.classList.contains('dark-mode')) {
+		 applyTheme('light');
+	     } else {
+		 applyTheme('dark');
+	     }
+	 });
+	</script>
+    </body>
+</html>
+ 

@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Pranshu's blog</title>
+    <link href="https://puff-paddi.github.io/rss.xml" rel="self" />
+    <link href="https://puff-paddi.github.io" />
+    <id>https://puff-paddi.github.io/rss.xml</id>
+    <author>
+        <name>Pranshu Sharma</name>
+        
+        <email>pranshu@bauherren.ovh</email>
+        
+    </author>
+    <updated>2025-12-02T00:00:00Z</updated>
+    <entry>
+    <title>Merging and splitting frames in emacs</title>
+    <link href="https://puff-paddi.github.io/posts/2025-merge-window.html" />
+    <id>https://puff-paddi.github.io/posts/2025-merge-window.html</id>
+    <published>2025-12-02T00:00:00Z</published>
+    <updated>2025-12-02T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<article>
+    <section class="header">
+        Posted on December  2, 2025
+        
+    </section>
+    <section class="info">
+	
+        tags: <a title="All pages tagged &#39;tech&#39;." href="/tags/tech.html" rel="tag">tech</a>
+        
+    </section>
+    <section>
+        <h1 id="overview">Overview</h1>
+<p>I’ve coded 2 new frame and widnow related functions that have been
+added to emacs.</p>
+<p><a href="https://github.com/emacs-mirror/emacs/commit/18a346da6ac0eaa28f835d66378ef023b7f5a1ab">The commit.</a></p>
+<p>The functions are kind of difficult to understand properly and have
+long docstrings (especially <code>split-frame</code>), so this provides some
+visuals which should really help.</p>
+<h2 id="merge-frames">Merge frames</h2>
+<p><code>M-x merge-frames</code></p>
+<p><img src="/2025stuff/window/merge.svg" /></p>
+<p>This function merges 2 frame into one window. If a prefix arg is
+provided (e.g. with <code>C-u</code>), the the resulting frame will consist of a
+vertical split(so if I used prefix arg with the above image, frame 3
+would have W1 above W2 which would be above W3).</p>
+<p>Yep, it’s that simple.</p>
+<h2 id="split-frame">Split frame</h2>
+<p><code>M-x split-frame</code></p>
+<p>The following image consists of the simplest example where there is
+only one root level split:</p>
+<p><img src="/2025stuff/window/split.svg" /></p>
+<p>Here is the rather confusing docstring which you don’t have to read:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Split windows of specified FRAME into two separate frames.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">FRAME must be a live frame and defaults to the selected frame.  ARG</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="st">specifies the number of windows to consider for splitting and defaults</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">to 1.  Interactively, ARG is the prefix argument.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st">First divide the child windows of FRAME&#39;s main window into two parts.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">The first part includes the first ARG child windows if ARG is positive,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">or -ARG last windows if it&#39;s negative.  The second part includes the</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">remaining child windows of FRAME&#39;s main window.  Then clone into a</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">newly-created frame each of the windows of the part which does not</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">include FRAME&#39;s selected window and delete those windows from FRAME.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">Signal an error if ARG is either zero or not a number, if FRAME&#39;s main</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">window is live or does not have more child windows than specified by the</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">absolute value of ARG.  Return the new frame.&quot;</span></span></code></pre></div>
+<hr />
+<p>Ok, so basiclly split-window accept one numerical prefix arg, which by default
+is 1. So <code>C-u 1 M-x split-frame</code> is the same as <code>M-x split-frame</code>.
+We will refer to this prefix argument as ARG.</p>
+<p>Assume we have a frame setup like this:</p>
+<p><img src="/2025stuff/window/demo.png" /></p>
+<p>This frame setup will be notated as:</p>
+<pre><code> -------------------
+| W1 |_W2_| W3 | W4 |
+ -------------------</code></pre>
+<p>(the selected window is notated like <code>_WN_</code>)</p>
+<p>ARG basiclly determines where an imaginary, divider is placed, which
+will decide where the split happens.</p>
+<p>The divider is placed counting from the left, but if ARG is negetive,
+then counting from the right.</p>
+<p>Now say we call <code>split-frame</code> with ARG of 1 (which is the same as ARG
+of -3, which means we could start counting from right but end up in
+same place)</p>
+<pre><code> ----||--------------      ----     -------------- 
+| W1 ||_W2_| W3 | W4 | -&gt; |_W1_|   |_W2_| W3 | W4 |
+ ----||-------------- 	   ----     -------------- </code></pre>
+<p>The left side shows where the imaginary divider is placed with <code>||</code>, and the right side contains the 2 resulting frames.</p>
+<p>Another example for with ARG of 2 (which in this case is the same as ARG of - 2)</p>
+<pre><code> ---------||---------      ---- ----      ---------- 
+| W1 |_W2_|| W3 | W4 | -&gt; | W1 |_W2_| +  |_W3_| W4 |
+ ---------||--------- 	   ---------      --------- </code></pre>
+<hr />
+<p>That’s it.</p>
+<p>If you want the more technical details of which windows will be cloned
+accross to the new frame and all that, check out the docstring.</p>
+<h1 id="tabs-todo">Tabs TODO</h1>
+<p>These functions currently work only with frames, even
+though the code could copy pasted with some parts replace to work for
+tabs (i.e. merge-tabs and split-tabs). I might come back to doing
+this later, but if you want to contribute then please do so, just send
+a mail to emacs-devel and cc (my email can be found <a href="/contact.html">here</a>) me.</p>
+<h1 id="development">Development</h1>
+<p>This is my <a href="/posts/2025-window.html">second</a> contribution to emacs window/frame management
+features, and by far the easier one as the concept was simpler and I
+already had some experiance with windows in emacs.</p>
+    </section>
+</article>
+]]></summary>
+</entry>
+<entry>
+    <title>I'm back</title>
+    <link href="https://puff-paddi.github.io/posts/2025-newwebsite.html" />
+    <id>https://puff-paddi.github.io/posts/2025-newwebsite.html</id>
+    <published>2025-11-16T00:00:00Z</published>
+    <updated>2025-11-16T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<article>
+    <section class="header">
+        Posted on November 16, 2025
+        
+    </section>
+    <section class="info">
+	
+        tags: <a title="All pages tagged &#39;life&#39;." href="/tags/life.html" rel="tag">life</a>
+        
+    </section>
+    <section>
+        <h1 id="intro">Intro</h1>
+<p>This is my first post in 6 month or so, and the reason is mostly
+because I wasn’t satisfied with my <a href="2025-intro">past blogging setup</a>.
+Now, I switched the website up completely, and it’s much better
+right now<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<h1 id="futre">Futre</h1>
+<p>I’ll be doing at the very minimum one article per month. I already
+have the next 2 debunk ideas ready. I’m going to do an
+anarcho-primitivism debunk, and then a debunk of common crypto
+critisim debunks.</p>
+<p>As for the direction of this blog, I’ll be activily trying not to make
+this ‘just another tech blog’ that posts about stuff already written
+about by 10+ people, so although I will still write tech articles,
+they will be far from exclusive in this blog.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I’ll write about the new setup in the near future<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </section>
+</article>
+]]></summary>
+</entry>
+<entry>
+    <title>Building this website (old)</title>
+    <link href="https://puff-paddi.github.io/posts/2025-intro.html" />
+    <id>https://puff-paddi.github.io/posts/2025-intro.html</id>
+    <published>2025-04-05T00:00:00Z</published>
+    <updated>2025-04-05T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<article>
+    <section class="header">
+        Posted on April  5, 2025
+        
+    </section>
+    <section class="info">
+	
+        tags: <a title="All pages tagged &#39;tech&#39;." href="/tags/tech.html" rel="tag">tech</a>
+        
+    </section>
+    <section>
+        <h1 id="update">UPDATE!!!</h1>
+<p><strong>November 2025:</strong>
+Pretty much everything in this post is invalid as I use a completely
+different system now.</p>
+<h1 id="intro">Intro</h1>
+<p>Right after spending about 2 weeks in making <em>genorg</em>, my supreme and
+<em>functioning</em> (most of the time) static site generator<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, here are the
+hows and whys.</p>
+<h1 id="criteria">Criteria</h1>
+<blockquote>
+<p>My criteria compared to your career just isn't fair</p>
+</blockquote>
+<ul>
+<li>The <del>markup</del> document type for the a blog article should be
+<a href="https://orgmode.org/">Org</a>, or something as powerful(void).</li>
+<li>The org to html function should be complete and work well. Currently
+(and eternally), this is only done by the emacs org exporter itself.</li>
+<li>Categories</li>
+<li>Moving files around in the 'articles' directory should still
+produce the same output blog. This means that the category info
+would need to be in the article file itself.</li>
+<li>A powerful and flexible templating system. This would be used for
+example to export to the blog page.</li>
+<li>Rss feeds.</li>
+</ul>
+<h2 id="comparasion-of-other-static-site-generators">Comparasion of other static site generators</h2>
+<p>Before I decided to make my own thing, I tried to find other static site
+generator that would meet this criteria. At the end, I was left with 2
+valid options.</p>
+<h3 id="hugojekyll">Hugo/jekyll</h3>
+<p>The compromise here would be using the shabby hugo org export, or use
+Hugo. However, this could pretty much be fixed by using
+<a href="http://ox-hugo.scripter.co">ox-hugo</a>. Now I look back at it, this would
+probably have been the better choice. oh well, I'm happy with I have
+now. I reccomend this to to all readers who have a similar criteria.</p>
+<p>Plus, using Hugo would remind me too much of the
+<a href="https://en.wikipedia.org/wiki/Hugo_(film)">film</a> with the same name
+which I vaguely remember watching, hence forcing me to rewatch and waste
+2 hours.</p>
+<h3 id="org-publish">Org publish</h3>
+<p>I couldn't move files, plus I would have to hand maintain the category
+pages. No thanks, I got better things to do (<em>gulp</em>).</p>
+<h1 id="the-solution">The solution</h1>
+<p>Writing about programming instead of just programming kinda sucks, bear
+with me.</p>
+<h2 id="genorg"><code class="verbatim">genorg</code></h2>
+<p><code class="verbatim">genorg</code> is a perl script which generates the sites from a
+input directory and a TOML configuration file. It scours and converts a
+bunch of org files in the directory, and converts them to html (if
+needed). Each of these files contain a <em>id</em> for internal use, and a
+<em>category</em>.</p>
+<pre><code>  Input                  Cache                Output
++-----------+       +---------------+       +-----------+
+| Org files | ----&gt; | direct org    | ----&gt; | Modified  |
+|           | ----&gt; | html export   | ----&gt; | html      |
++-----------+       +---------------+       +-----------+
+                       |        |
+                    +---------------+       +-----------+
+                    | Neccasary info| ----&gt; | navigtion |
+                    | eg title, date| ----&gt; | files     |
+                    +---------------+       +-----------+</code></pre>
+<p>Of course, any good static site generator needs a good templating
+system. So since <em>genorg</em> used perl, I had a obvious choice ahead:
+<a href="https://template-toolkit.org/">Template::Toolkit</a>. Since it used C code
+with perl bindings, it was extremly fast. But still very powerful since
+it has been around for a while.</p>
+<p>A example info file generated by genorg to communicate with genserve:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;landing&quot;</span><span class="fu">:</span> <span class="st">&quot;templates/index.html.tt&quot;</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;blog_dir&quot;</span><span class="fu">:</span> <span class="st">&quot;/blog/&quot;</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;rss_dir&quot;</span><span class="fu">:</span> <span class="st">&quot;/rss/:cat&quot;</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;main_rss&quot;</span><span class="fu">:</span> <span class="st">&quot;templates/main.xml&quot;</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;blog_file&quot;</span><span class="fu">:</span> <span class="st">&quot;templates/blog.html.tt&quot;</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;cpath&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;file&quot;</span><span class="fu">:</span> <span class="st">&quot;templates/1.html&quot;</span><span class="fu">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;rss&quot;</span><span class="fu">:</span> <span class="st">&quot;templates/1.html.xml&quot;</span><span class="fu">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;cat&quot;</span><span class="fu">:</span> <span class="st">&quot;tech&quot;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;files&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;cat&quot;</span><span class="fu">:</span> <span class="st">&quot;tech&quot;</span><span class="fu">,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;art&quot;</span><span class="fu">:</span> <span class="st">&quot;introblog&quot;</span><span class="fu">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;file&quot;</span><span class="fu">:</span> <span class="st">&quot;2025/intro.org.html&quot;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;cat&quot;</span><span class="fu">:</span> <span class="st">&quot;tech&quot;</span><span class="fu">,</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;file&quot;</span><span class="fu">:</span> <span class="st">&quot;2025/window.org.html&quot;</span><span class="fu">,</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;art&quot;</span><span class="fu">:</span> <span class="st">&quot;new_window_cmds&quot;</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;main_rss_url&quot;</span><span class="fu">:</span> <span class="st">&quot;/rss&quot;</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The navigation files are considered stuff like the category pages. To
+keep the urls the same even when a org file is moved, the site needs to
+dynamically resolve links into respsecite file paths.
+<code>example.com/category/article-id</code> needs to find the file and serve it.</p>
+<h3 id="why-perl">Why perl?</h3>
+<blockquote>
+<p>Lisp has all the visual appeal of oatmeal with fingernail clippings
+mixed in.</p>
+</blockquote>
+<p>Larry Wall, as always, puts it very well. The other reasons are because
+of <a href="https://en.wiktionary.org/wiki/TMTOWTDI#English">TIMTOWDI</a>, and
+typed containers (in combination with a weakly typed language.).</p>
+<h2 id="genserve"><code class="verbatim">genserve</code></h2>
+<p>So now to serve the dynamicly serve the genorg output, all we have to do
+is parse the json file and redirect files accordingly. Easy enough…
+right?</p>
+<p>Well, it would be if I was satisfied with http requests taking 0.0001
+seconds to be proccesed by genorg instead of 0.00001 seconds.</p>
+<p>So I initally decided to make the http server part in Go. This did not
+go well, I didn't like the language, I didn't like the http server the
+standard library provided. So in about one day, I wrote <strong>300+ lines</strong>
+of zig code to make it work.</p>
+<p>Although the process was tedious, the result was worth it, as any
+visitors get to save approximately <span class="math inline">10 × 10<sup>−</sup>5 <em>s</em><em>e</em><em>c</em><em>o</em><em>n</em><em>d</em><em>s</em></span> for every
+visit.</p>
+<h1 id="code">Code</h1>
+<p>My beautiful code can be found <a href="file:///g:/asset/genorg">here</a>. As for
+the http server code, I won't share that. Simply cause it's crappy
+code and it's going to be easy to find exploits in it. If you do decide
+to use <code class="verbatim">genorg</code>, I suggest using a fastcgi script to serve
+content based of the parsed <code class="verbatim">json</code>.</p>
+<h1 id="what-now">What now?</h1>
+<p>I'm very happy with the software used to generate the blog and
+articles, but I still want to add some HTML and CSS and images in the
+home page and category pages to make the site more vibrant (I've
+recived feedback that this site reminds a viewer of a 'bee'). Maybe
+later, I'll write about the non-technical aspect of blogs and why I
+wanted to have one.</p>
+<h1 id="footnotes">Footnotes</h1>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Well, technically <em>genorg</em> does also have a dynamic part to it.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </section>
+</article>
+]]></summary>
+</entry>
+<entry>
+    <title>New window commands for emacs</title>
+    <link href="https://puff-paddi.github.io/posts/2025-window.html" />
+    <id>https://puff-paddi.github.io/posts/2025-window.html</id>
+    <published>2025-03-29T00:00:00Z</published>
+    <updated>2025-03-29T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<article>
+    <section class="header">
+        Posted on March 29, 2025
+        
+    </section>
+    <section class="info">
+	
+        tags: <a title="All pages tagged &#39;tech&#39;." href="/tags/tech.html" rel="tag">tech</a>
+        
+    </section>
+    <section>
+        <h1 id="intro">Intro</h1>
+<p>Around September 2024, I also discovered this useful package for emacs
+windows management
+<a href="https://www.emacswiki.org/emacs/TransposeFrame">transpose-frame.el</a>.</p>
+<p>Around this time, I read Tobias' article on <a href="https://blogs.gnome.org/tbernard/2020/01/17/doing-things-that-scale/">doing things that scale</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>So of course, as a changed man, I sent a simple email asking for
+<code class="verbatim">tranpose-frame.el</code> to be moved to emacs core. But as it
+turned out, the package had many things wrong at it's core which would
+be impossible to fix without a rewrite.</p>
+<p>Basiclly, <code class="verbatim">transpose-frame.el</code> relies on "copy pasting"
+window states(like the buffer, overlays, etc…), which was a faulty
+approach<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. The correct approach required new code in emacs <em>C-land</em>
+to be able to 'necromance' window objects when using the function
+<code class="verbatim">split-window</code>. For this reason, simply changing up the code
+in <code class="verbatim">transpose-frame.el</code> would not be sufficant. A full
+rewrite was required.</p>
+<p>So, not knowing how much work was in, I agreed to do it. So after
+about 4 months of infrequent, <em>painful</em> work<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, including constant
+collaboration with Martin Rudalics, the <code class="verbatim">windows.c</code> and
+<code class="verbatim">windows.el</code> maintainer who take care of all the code in
+the <em>C-land</em> size. <strong>Now</strong>, emacs 31 has all the functionality that
+<code class="verbatim">transpose-frame.el</code> had, plus extra. The file containg all
+these comands is <code class="verbatim">window-x.el</code>, which <strong>can be found
+here</strong>:
+<a href="https://github.com/emacs-mirror/emacs/blob/master/lisp/window-x.el" class="uri">https://github.com/emacs-mirror/emacs/blob/master/lisp/window-x.el</a>.</p>
+<h1 id="commands">Commands</h1>
+<p>Now, I used a simple layout for the following images simply cause I was
+too lazy to make more complex ones. Keep in mind, that these commands
+can work for <strong>any</strong> complex window layout you can cook up.</p>
+<p>I would suggest trying them and playing around with them, but if you
+don't have emacs 31, this is a preview.</p>
+<h2 id="transpose">Transpose</h2>
+<p><code class="verbatim">M-x transpose-window-layout</code></p>
+<p>This one is basiclly diagonal reflection.</p>
+<p><img src="/2025stuff/window/transpose.png" /></p>
+<h2 id="rotate-layout">Rotate layout</h2>
+<p><code class="verbatim">M-x rotate-window-layout-clockwise</code></p>
+<p><code class="verbatim">M-x rotate-window-layout-anticlockwise</code></p>
+<p><img src="/2025stuff/window/rotate-clock.png" /></p>
+<h2 id="flip">Flip</h2>
+<p><code class="verbatim">M-x flip-window-layout-horizontally</code></p>
+<p><code class="verbatim">M-x flip-window-layout-vertically</code></p>
+<p><img src="/2025stuff/window/flip-v.png" /></p>
+<h2 id="cycle-rotate-windows">Cycle (rotate windows)</h2>
+<p>This one is my personal favourite.</p>
+<p><code class="verbatim">M-x rotate-windows</code></p>
+<p><img src="/2025stuff/window/cycle.png" /></p>
+<p><code class="verbatim">M-x rotate-windows-back</code></p>
+<p><img src="/2025stuff/window/cycle-anti.png" /></p>
+<h1 id="footnotes">Footnotes</h1>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>TLDR: instead of customizing and maintaing customizations, try push
+changes to upstream<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>This <a href="https://yhetil.org/emacs-devel/ac1735fd-e023-4e01-a3e2-2bd19087594c@gmx.at/">mail</a> goes in more detail about what was wrong with
+<code class="verbatim">transpose-frame.el</code><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>(The emacs window
+system is much\, much\, more complex than what meets the surface)<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </section>
+</article>
+]]></summary>
+</entry>
+
+</feed>

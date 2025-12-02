@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Pranshu's Blog - tech</title>
+        <link rel="stylesheet" href="../css/default.css" />
+	<link rel="icon" href="../stuff/favicon.png">
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">Pranshu's Blog</a>
+		<button id="theme-toggle"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;" id="themesvg"></svg></button>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+		<a align="right" href="../rss.xml">Feed</a>
+            </nav>
+        </header>
+        <main role="main">
+            <h1>tech</h1>
+            <ul class="post-list">
+    
+        <li>
+            <a href="../posts/2025-merge-window.html">Merging and splitting frames in emacs</a> - December  2, 2025
+        </li>
+    
+        <li>
+            <a href="../posts/2025-intro.html">Building this website (old)</a> - April  5, 2025
+        </li>
+    
+        <li>
+            <a href="../posts/2025-window.html">New window commands for emacs</a> - March 29, 2025
+        </li>
+    
+</ul>
+
+        </main>
+
+        <footer>
+            2025 &copy Pranshu
+        </footer>
+	<script>
+	 const themeToggle = document.getElementById('theme-toggle');
+	 const themebutton = document.getElementById('themesvg');
+	 const root = document.documentElement;
+	 const moonsvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+	 const sunsvg = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+	 function applyTheme(theme) {
+	     if (theme === 'dark') {
+		 root.classList.add('dark-mode');
+		 themebutton.innerHTML = moonsvg;
+	     } else {
+		 root.classList.remove('dark-mode');
+		 themebutton.innerHTML = sunsvg;
+	     }
+	     localStorage.setItem('theme', theme);
+	 }
+	 document.addEventListener('DOMContentLoaded', () => {
+	     const savedTheme = localStorage.getItem('theme');
+	     if (savedTheme) {
+		 applyTheme(savedTheme);
+	     } else {
+		 applyTheme('light');
+	     }
+	 });
+	 themeToggle.addEventListener('click', () => {
+	    if (root.classList.contains('dark-mode')) {
+		 applyTheme('light');
+	     } else {
+		 applyTheme('dark');
+	     }
+	 });
+	</script>
+    </body>
+</html>
+ 

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="691"
+   height="213"
+   viewBox="0 0 182.82711 56.356279"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   sodipodi:docname="split.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.5019781"
+     inkscape:cx="313.91935"
+     inkscape:cy="18.309188"
+     inkscape:window-width="1920"
+     inkscape:window-height="1023"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <rect
+     style="fill:#c8beb7;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+     id="rect17"
+     width="177.56584"
+     height="40.692169"
+     x="3.2526371"
+     y="9.4461937" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#a02c2c;stroke:none;stroke-width:0.5;stroke-dasharray:none"
+       d="m 54.022406,30.408426 h 9.600534 l -0.08808,-3.743328 4.580072,5.504894 -4.139679,4.756227 -0.08808,-2.950623 -10.040925,-0.132117 z"
+       id="path6" />
+    <g
+       id="g8"
+       transform="translate(-6.6695734,-27.204455)">
+      <rect
+         style="fill:#a02c2c;stroke:none;stroke-width:0.360548;stroke-dasharray:none"
+         id="rect7"
+         width="0.9688611"
+         height="8.5435934"
+         x="128.72643"
+         y="55.709515" />
+      <rect
+         style="fill:#a02c2c;stroke:none;stroke-width:0.360548;stroke-dasharray:none"
+         id="rect8"
+         width="0.9688611"
+         height="8.5435934"
+         x="59.49688"
+         y="-133.48265"
+         transform="rotate(90)" />
+    </g>
+    <g
+       id="g17">
+      <g
+         id="g6"
+         transform="translate(7.8253428,-15.568442)">
+        <rect
+           style="fill:#ececec;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
+           id="rect1"
+           width="23.090702"
+           height="11.649879"
+           x="20.746302"
+           y="37.232059" />
+        <rect
+           style="fill:#44aa00;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
+           id="rect2"
+           width="23.038818"
+           height="12.017668"
+           x="20.772243"
+           y="48.881935" />
+        <rect
+           style="fill:#decd87;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
+           id="rect3"
+           width="18.748117"
+           height="23.64447"
+           x="2.0241261"
+           y="37.255135" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+         x="13.822031"
+         y="35.341209"
+         id="text9"><tspan
+           sodipodi:role="line"
+           id="tspan9"
+           style="fill:#000000;stroke-width:0.5"
+           x="13.822031"
+           y="35.341209">W1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+         x="36.898544"
+         y="28.559183"
+         id="text10"><tspan
+           sodipodi:role="line"
+           id="tspan10"
+           style="stroke-width:0.5"
+           x="36.898544"
+           y="28.559183">W2</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+         x="38.131641"
+         y="38.247795"
+         id="text11"><tspan
+           sodipodi:role="line"
+           id="tspan11"
+           style="stroke-width:0.5"
+           x="38.131641"
+           y="38.247795">W3</tspan></text>
+    </g>
+    <g
+       id="g18">
+      <rect
+         style="fill:#decd87;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
+         id="rect6"
+         width="41.64925"
+         height="23.508207"
+         x="70.230446"
+         y="21.022751" />
+      <text
+         xml:space="preserve"
+         style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+         x="82.082703"
+         y="33.051174"
+         id="text12"><tspan
+           sodipodi:role="line"
+           id="tspan12"
+           style="stroke-width:0.5"
+           x="82.082703"
+           y="33.051174">W1</tspan></text>
+    </g>
+    <g
+       id="g19">
+      <g
+         id="g5"
+         transform="matrix(1.8086155,0,0,0.99650452,133.06694,11.266903)"
+         style="stroke-width:0.372441;stroke-dasharray:none">
+        <rect
+           style="fill:#ececec;stroke:#000000;stroke-width:0.372441;stroke-dasharray:none"
+           id="rect4"
+           width="23.090702"
+           height="11.649879"
+           x="0"
+           y="9.7516327" />
+        <rect
+           style="fill:#44aa00;stroke:#000000;stroke-width:0.372441;stroke-dasharray:none"
+           id="rect5"
+           width="23.038818"
+           height="12.017668"
+           x="0.025941849"
+           y="21.401508" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+         x="144.61592"
+         y="26.531603"
+         id="text13"><tspan
+           sodipodi:role="line"
+           id="tspan13"
+           style="stroke-width:0.5"
+           x="144.61592"
+           y="26.531603">W2</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+         x="147.60541"
+         y="39.485996"
+         id="text14"><tspan
+           sodipodi:role="line"
+           id="tspan14"
+           style="stroke-width:0.5"
+           x="147.60541"
+           y="39.485996">W3</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+       x="19.811354"
+       y="16.668613"
+       id="text15"><tspan
+         sodipodi:role="line"
+         id="tspan15"
+         style="stroke-width:0.5"
+         x="19.811354"
+         y="16.668613">Frame 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+       x="80.937691"
+       y="15.435518"
+       id="text16"><tspan
+         sodipodi:role="line"
+         id="tspan16"
+         style="stroke-width:0.5"
+         x="80.937691"
+         y="15.435518">Frame 2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.175px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.499999;stroke-dasharray:none"
+       x="145.58717"
+       y="16.140144"
+       id="text17"><tspan
+         sodipodi:role="line"
+         id="tspan17"
+         style="stroke-width:0.5"
+         x="145.58717"
+         y="16.140144">Frame 3</tspan></text>
+  </g>
+</svg>

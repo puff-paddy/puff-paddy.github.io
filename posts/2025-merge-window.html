@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Pranshu's Blog - Merging and splitting frames in emacs</title>
+        <link rel="stylesheet" href="../css/default.css" />
+	<link rel="icon" href="../stuff/favicon.png">
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">Pranshu's Blog</a>
+		<button id="theme-toggle"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;" id="themesvg"></svg></button>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+		<a align="right" href="../rss.xml">Feed</a>
+            </nav>
+        </header>
+        <main role="main">
+            <h1>Merging and splitting frames in emacs</h1>
+            <article>
+    <section class="header">
+        Posted on December  2, 2025
+        
+    </section>
+    <section class="info">
+	
+        tags: <a title="All pages tagged 'tech'." href="../tags/tech.html" rel="tag">tech</a>
+        
+    </section>
+    <section>
+        <h1 id="overview">Overview</h1>
+<p>I’ve coded 2 new frame and widnow related functions that have been
+added to emacs.</p>
+<p><a href="https://github.com/emacs-mirror/emacs/commit/18a346da6ac0eaa28f835d66378ef023b7f5a1ab">The commit.</a></p>
+<p>The functions are kind of difficult to understand properly and have
+long docstrings (especially <code>split-frame</code>), so this provides some
+visuals which should really help.</p>
+<h2 id="merge-frames">Merge frames</h2>
+<p><code>M-x merge-frames</code></p>
+<p><img src="../2025stuff/window/merge.svg" /></p>
+<p>This function merges 2 frame into one window. If a prefix arg is
+provided (e.g. with <code>C-u</code>), the the resulting frame will consist of a
+vertical split(so if I used prefix arg with the above image, frame 3
+would have W1 above W2 which would be above W3).</p>
+<p>Yep, it’s that simple.</p>
+<h2 id="split-frame">Split frame</h2>
+<p><code>M-x split-frame</code></p>
+<p>The following image consists of the simplest example where there is
+only one root level split:</p>
+<p><img src="../2025stuff/window/split.svg" /></p>
+<p>Here is the rather confusing docstring which you don’t have to read:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Split windows of specified FRAME into two separate frames.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">FRAME must be a live frame and defaults to the selected frame.  ARG</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="st">specifies the number of windows to consider for splitting and defaults</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">to 1.  Interactively, ARG is the prefix argument.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st">First divide the child windows of FRAME's main window into two parts.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">The first part includes the first ARG child windows if ARG is positive,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">or -ARG last windows if it's negative.  The second part includes the</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">remaining child windows of FRAME's main window.  Then clone into a</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">newly-created frame each of the windows of the part which does not</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">include FRAME's selected window and delete those windows from FRAME.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">Signal an error if ARG is either zero or not a number, if FRAME's main</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">window is live or does not have more child windows than specified by the</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">absolute value of ARG.  Return the new frame.&quot;</span></span></code></pre></div>
+<hr />
+<p>Ok, so basiclly split-window accept one numerical prefix arg, which by default
+is 1. So <code>C-u 1 M-x split-frame</code> is the same as <code>M-x split-frame</code>.
+We will refer to this prefix argument as ARG.</p>
+<p>Assume we have a frame setup like this:</p>
+<p><img src="../2025stuff/window/demo.png" /></p>
+<p>This frame setup will be notated as:</p>
+<pre><code> -------------------
+| W1 |_W2_| W3 | W4 |
+ -------------------</code></pre>
+<p>(the selected window is notated like <code>_WN_</code>)</p>
+<p>ARG basiclly determines where an imaginary, divider is placed, which
+will decide where the split happens.</p>
+<p>The divider is placed counting from the left, but if ARG is negetive,
+then counting from the right.</p>
+<p>Now say we call <code>split-frame</code> with ARG of 1 (which is the same as ARG
+of -3, which means we could start counting from right but end up in
+same place)</p>
+<pre><code> ----||--------------      ----     -------------- 
+| W1 ||_W2_| W3 | W4 | -&gt; |_W1_|   |_W2_| W3 | W4 |
+ ----||-------------- 	   ----     -------------- </code></pre>
+<p>The left side shows where the imaginary divider is placed with <code>||</code>, and the right side contains the 2 resulting frames.</p>
+<p>Another example for with ARG of 2 (which in this case is the same as ARG of - 2)</p>
+<pre><code> ---------||---------      ---- ----      ---------- 
+| W1 |_W2_|| W3 | W4 | -&gt; | W1 |_W2_| +  |_W3_| W4 |
+ ---------||--------- 	   ---------      --------- </code></pre>
+<hr />
+<p>That’s it.</p>
+<p>If you want the more technical details of which windows will be cloned
+accross to the new frame and all that, check out the docstring.</p>
+<h1 id="tabs-todo">Tabs TODO</h1>
+<p>These functions currently work only with frames, even
+though the code could copy pasted with some parts replace to work for
+tabs (i.e. merge-tabs and split-tabs). I might come back to doing
+this later, but if you want to contribute then please do so, just send
+a mail to emacs-devel and cc (my email can be found <a href="../contact.html">here</a>) me.</p>
+<h1 id="development">Development</h1>
+<p>This is my <a href="../posts/2025-window.html">second</a> contribution to emacs window/frame management
+features, and by far the easier one as the concept was simpler and I
+already had some experiance with windows in emacs.</p>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            2025 &copy Pranshu
+        </footer>
+	<script>
+	 const themeToggle = document.getElementById('theme-toggle');
+	 const themebutton = document.getElementById('themesvg');
+	 const root = document.documentElement;
+	 const moonsvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+	 const sunsvg = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+	 function applyTheme(theme) {
+	     if (theme === 'dark') {
+		 root.classList.add('dark-mode');
+		 themebutton.innerHTML = moonsvg;
+	     } else {
+		 root.classList.remove('dark-mode');
+		 themebutton.innerHTML = sunsvg;
+	     }
+	     localStorage.setItem('theme', theme);
+	 }
+	 document.addEventListener('DOMContentLoaded', () => {
+	     const savedTheme = localStorage.getItem('theme');
+	     if (savedTheme) {
+		 applyTheme(savedTheme);
+	     } else {
+		 applyTheme('light');
+	     }
+	 });
+	 themeToggle.addEventListener('click', () => {
+	    if (root.classList.contains('dark-mode')) {
+		 applyTheme('light');
+	     } else {
+		 applyTheme('dark');
+	     }
+	 });
+	</script>
+    </body>
+</html>
+ 
