@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Pranshu's Blog - Future of linux desktop</title>
+        <link rel="stylesheet" href="../css/default.css" />
+	<link rel="icon" href="../stuff/favicon.png">
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">Pranshu's Blog</a>
+		<button id="theme-toggle"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;" id="themesvg"></svg></button>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+		<a align="right" href="../rss.xml">Feed</a>
+            </nav>
+        </header>
+        <main role="main">
+            <h1>Future of linux desktop</h1>
+            <article>
+    <section class="header">
+        Posted on April 14, 2026
+        
+    </section>
+    <section class="info">
+	
+        tags: <a title="All pages tagged 'tech'." href="../tags/tech.html" rel="tag">tech</a>
+        
+    </section>
+    <section>
+        <h1 id="intro">Intro</h1>
+<p>At the start of this year, I installed Linux Mint on my main laptop. I’ve used Mint Mate edition before on my secondary laptop a bit, so I wasn’t new by then. Since then, because of various issues I’ve distrohopped</p>
+<pre><code>Mint (lack of touchpad gestures + freezing thumbnails)
+-&gt; Ubuntu (Anti snap propaganda got to my head)
+-&gt; Fedora (Issue where 'output' speakers list grew infinitly and crashed GNOME + headphone jack issue)
+-&gt; opensuse tumbleweed (failing updates + bricked system + headphone jack issue)
+-&gt; Ubuntu</code></pre>
+<p>I’ve learned quite a lot from this journey, and now I’ve used being on ubuntu for about a month and I think I can confidently say that I will stay.</p>
+<p>None of the distros I’ve used were bad, they just weren’t for me. The 2 most important features of any linux distros are frequncy of updates/stability and look and feel. All else is secondary. Fedora’s dnf might be better than ubuntu’s apt, but I like ubuntu’s take on GNOME more. Yes, I could make fedora like ubuntu, but the burden of maintaince would be on me.</p>
+<h1 id="the-main-problem-with-desktop-linux">The main problem with desktop linux</h1>
+<p>Sadly, there isn’t a single ‘main problem’, if there was it’d just be easy to fix it and enter the <em>year of the linux desktop</em>. Along with freedom, comes the freedom to mess up easily. What we strive for, is up to date packages and general system stability.</p>
+<p>Every time you install a package using a traditional package manager(apt, dnf, pacman, etc…), then basiclly you run an install script the package provides, where they can pretty much do anything(yes, you could theoretically make a package that runs DOOM during installation). So basiclly you mutate your root directories to install a package. This is an extremely chaotic approach, and often the root cause for instability.</p>
+<p>All we want is for distros to focus on the feel of the desktop, be unbreakable. This is incompatible with traditional package managers<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>The solution to this is actually quite simple, make every directory other than <code>/home</code> immutable. That way, you can rollback all upgrades, maintance is super easy as the devs know everyones file system is synced, and the system is more stable, as updates are applied as full images instead of constantly mutating the system.</p>
+<h2 id="immutable-linux-distros-problems">Immutable linux distros: Problems</h2>
+<p>Ok, so we now have immutable distros where only the <code>/home</code> directory is under the user’s control. There’s a very obvious problem with this: You can’t install packages, as they mutate the system. There are 2 solutions that most distros use:
+1. Use flatpaks for gui apps.
+2. For other packages, ‘layer’ them (tools like <code>rpm-ostree</code> do this). So say you ‘layer’ emacs on your immutable system, your system becomes <code>base + mutation(emacs)</code>. So whenever you update, your <code>base</code> syncs to the official base image, then is mutated with emacs. This can get really slow really fast once you have <code>base + mutation(a) + mutation(b) + mutation(c)</code>, where for every update base will be synced, then mutations <code>a</code>, <code>b</code>, and <code>c</code> will be applied.</p>
+<p>Considering that now to install any cli program, any daemon, or anything that can’t come as a flatpak(you can use flatpaks to install cli programs, but it’s painful and it’s not what flatpak is designed for, you’ll have to do <code>flatpak run org.gnu.ls</code> if you wanted to run a fictional flatpak version of <code>ls</code>) you’ll need to take the latter approach for most things, now I bet immutable distros don’t seem so attractive anymore. Luckily, there’s a simple solution.</p>
+<h1 id="snaps">Snaps</h1>
+<p>BUT.. BUT… SNAPS BAD, SNAPS SLOW, NOT OPEN SOURCE, BAD DEPENDENCY MANAGEMENT , EVIL.</p>
+<p>Let’s address this: Snaps are not slow anymore, they used to be, but that’s simply not a problem anymore. Snaps are open source, the only thing that isn’t is cannonical’s backend code for the snap <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Contrary to popular belief, snap do use shared dependencies, just not the traditional way. Most libraries are included in each snap, but snaps can reuse parts of other snaps.</p>
+<p>Now, lets talk about why snaps are good:
+- They are sandboxed, like flatpaks
+- They are immutable
+- ANY <code>.deb</code> or rpm package can be a snap. Even the linux kernal can be a snap(see ubuntu core).</p>
+<h1 id="the-future">The future</h1>
+<p>So why did I bring up snaps? Well, it’s obvious now, that they can replace the flatpak + layering combo for immutable distros. So you’ll be able to install everything(cli tools, gui stuff, daemons, etc…) with snaps and enjoy the unbreakable stability of an immutable distro at the same time. No more worrying about updates breaking things, or tiny user specific bugs.</p>
+<p>Although a immutable snap based version of ubuntu dosn’t exist yet, it’s likley cannonical is going to come out with one, and when it does, I’m switching.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>There are distro’s that come close to this, for example opensuse tumbleweed which uses BTRFS to provide functionality. However, it’s still a hack, your system still mutates constantly. Recently, opensuse updated to systemd-boot from grub. You had to do this manually, as there was no image to sync to that would have done this for you. Users shouldn’t have to go through this.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Although I don’t agree fully with this decison, you can see why they did this, they don’t want other people making snap stores so easily because you are basiclly giving anyone whose repo you install a snap from root access. It’s the same for flatpak, I bet you don’t have any non flathub flatpaks, why?<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            2026 &copy Pranshu
+        </footer>
+	<script>
+	 const themeToggle = document.getElementById('theme-toggle');
+	 const themebutton = document.getElementById('themesvg');
+	 const root = document.documentElement;
+	 const moonsvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+	 const sunsvg = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+	 function applyTheme(theme) {
+	     if (theme === 'dark') {
+		 root.classList.add('dark-mode');
+		 themebutton.innerHTML = moonsvg;
+	     } else {
+		 root.classList.remove('dark-mode');
+		 themebutton.innerHTML = sunsvg;
+	     }
+	     localStorage.setItem('theme', theme);
+	 }
+	 document.addEventListener('DOMContentLoaded', () => {
+	     const savedTheme = localStorage.getItem('theme');
+	     if (savedTheme) {
+		 applyTheme(savedTheme);
+	     } else {
+		 applyTheme('light');
+	     }
+	 });
+	 themeToggle.addEventListener('click', () => {
+	    if (root.classList.contains('dark-mode')) {
+		 applyTheme('light');
+	     } else {
+		 applyTheme('dark');
+	     }
+	 });
+	</script>
+    </body>
+</html>
+ 
